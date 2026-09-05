@@ -124,6 +124,8 @@ export const submissions = pgTable(
 
         rejectionReason: text("rejection_reason"),
 
+        earningsCents: integer("earnings_cents"),
+
         createdAt: timestamp("created_at")
             .defaultNow()
             .notNull(),
