@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
     campaignFormSchema,
+    PG_INTEGER_MAX,
     type CampaignFormValues,
 } from "@/lib/schemas";
 
@@ -141,6 +142,7 @@ export function CampaignForm({
                         id="payout"
                         type="number"
                         min={1}
+                        max={PG_INTEGER_MAX}
                         step={1}
                         aria-invalid={!!errors.payoutPer1kViews}
                         {...form.register("payoutPer1kViews", {
@@ -155,6 +157,7 @@ export function CampaignForm({
                         id="budget"
                         type="number"
                         min={1}
+                        max={PG_INTEGER_MAX}
                         step={1}
                         aria-invalid={!!errors.totalBudget}
                         {...form.register("totalBudget", {

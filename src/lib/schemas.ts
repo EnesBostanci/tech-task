@@ -25,6 +25,33 @@ export const submissionStatusSchema = z.enum([
 
 const campaignInsertBase = createInsertSchema(campaigns);
 
+export const PG_INTEGER_MAX = 2_147_483_647;
+
+function pgPositiveInt() {
+    return z.number().superRefine((value, ctx) => {
+        if (value <= 0) {
+            ctx.addIssue({
+                code: "custom",
+                message: "Must be greater than 0",
+            });
+            return;
+        }
+        if (value > PG_INTEGER_MAX) {
+            ctx.addIssue({
+                code: "custom",
+                message: "Must be at most 2147483647",
+            });
+            return;
+        }
+        if (!Number.isInteger(value)) {
+            ctx.addIssue({
+                code: "custom",
+                message: "Must be a whole number",
+            });
+        }
+    });
+}
+
 export const campaignFormSchema = campaignInsertBase
     .omit({
         id: true,
@@ -37,14 +64,8 @@ export const campaignFormSchema = campaignInsertBase
         platforms: z
             .array(platformSchema)
             .min(1, "Select at least one platform"),
-        payoutPer1kViews: z
-            .number()
-            .int("Must be a whole number")
-            .positive("Must be greater than 0"),
-        totalBudget: z
-            .number()
-            .int("Must be a whole number")
-            .positive("Must be greater than 0"),
+        payoutPer1kViews: pgPositiveInt(),
+        totalBudget: pgPositiveInt(),
         status: campaignStatusSchema,
         // tRPC JSON serializes Date as ISO strings; coerce so create/update work.
         startsAt: z.coerce.date(),

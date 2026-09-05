@@ -3,6 +3,7 @@ import { describe, expect, it } from "vitest";
 import {
     campaignFormSchema,
     campaignUpdateSchema,
+    PG_INTEGER_MAX,
     submissionCreateSchema,
 } from "@/lib/schemas";
 
@@ -71,6 +72,57 @@ describe("campaign money fields", () => {
             expect(result.error.issues[0]?.path).toEqual(["payoutPer1kViews"]);
             expect(result.error.issues[0]?.message).toBe(
                 "Must be greater than 0",
+            );
+        }
+    });
+
+    it("rejects a budget larger than a Postgres integer", () => {
+        const result = campaignFormSchema.safeParse({
+            ...payload,
+            totalBudget: 1_000_000_000_000_000,
+            startsAt: new Date("2026-09-01T00:00:00.000Z"),
+            endsAt: new Date("2026-09-30T00:00:00.000Z"),
+        });
+
+        expect(result.success).toBe(false);
+        if (!result.success) {
+            expect(result.error.issues[0]?.path).toEqual(["totalBudget"]);
+            expect(result.error.issues[0]?.message).toBe(
+                "Must be at most 2147483647",
+            );
+        }
+    });
+
+    it("rejects a payout larger than a Postgres integer", () => {
+        const result = campaignFormSchema.safeParse({
+            ...payload,
+            payoutPer1kViews: PG_INTEGER_MAX + 1,
+            startsAt: new Date("2026-09-01T00:00:00.000Z"),
+            endsAt: new Date("2026-09-30T00:00:00.000Z"),
+        });
+
+        expect(result.success).toBe(false);
+        if (!result.success) {
+            expect(result.error.issues[0]?.path).toEqual(["payoutPer1kViews"]);
+            expect(result.error.issues[0]?.message).toBe(
+                "Must be at most 2147483647",
+            );
+        }
+    });
+
+    it("still shows the max message when the number is too big to be an integer", () => {
+        const result = campaignFormSchema.safeParse({
+            ...payload,
+            totalBudget: 1e21,
+            startsAt: new Date("2026-09-01T00:00:00.000Z"),
+            endsAt: new Date("2026-09-30T00:00:00.000Z"),
+        });
+
+        expect(result.success).toBe(false);
+        if (!result.success) {
+            expect(result.error.issues[0]?.path).toEqual(["totalBudget"]);
+            expect(result.error.issues[0]?.message).toBe(
+                "Must be at most 2147483647",
             );
         }
     });
