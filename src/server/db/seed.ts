@@ -24,7 +24,7 @@ const STATUSES: SubmissionStatus[] = [
 
 const APPROVED_SEED_VIEWS = 8_000;
 const PENDING_SEED_VIEWS = 5_000;
-const SEED_METRIC_DAY = "2026-09-05";
+const SEED_METRIC_DAY = "2026-09-04";
 
 /** Approved rows with no views would show $0 on the overview — keep those pending. */
 function statusForSeed(
@@ -97,7 +97,7 @@ const campaignSeed = [
         totalBudget: 80000,
         spentBudget: 0,
         status: "active" as const,
-        startsAt: new Date("2026-09-05"),
+        startsAt: new Date("2026-09-01"),
         endsAt: new Date("2026-10-05"),
     },
     {
@@ -358,7 +358,7 @@ const budgetCeilingMetrics = [
     {
         id: "metric-budget-a",
         submissionId: "sub-budget-a",
-        capturedAt: "2026-09-05",
+        capturedAt: "2026-09-04",
         views: 5000,
         likes: 10,
         comments: 1,
@@ -366,7 +366,7 @@ const budgetCeilingMetrics = [
     {
         id: "metric-budget-b",
         submissionId: "sub-budget-b",
-        capturedAt: "2026-09-05",
+        capturedAt: "2026-09-04",
         views: 5000,
         likes: 10,
         comments: 1,
@@ -400,7 +400,7 @@ const oneApproveMetrics = [
     {
         id: "metric-one-approve-a",
         submissionId: "sub-one-approve-a",
-        capturedAt: "2026-09-05",
+        capturedAt: "2026-09-04",
         views: 10_000,
         likes: 40,
         comments: 4,
@@ -408,7 +408,7 @@ const oneApproveMetrics = [
     {
         id: "metric-one-approve-b",
         submissionId: "sub-one-approve-b",
-        capturedAt: "2026-09-05",
+        capturedAt: "2026-09-04",
         views: 10_000,
         likes: 40,
         comments: 4,
